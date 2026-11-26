@@ -20,6 +20,8 @@ import {
   X,
 } from "lucide-react";
 import { PlaceOnLogo } from "./PlaceOnLogo";
+import { CompanySortSelect } from "./CompanySortSelect";
+import { sortCompanies, type CompanySortOption } from "@/lib/companySort";
 import { COURSES } from "@/lib/constants";
 import { formatSemesterScores } from "@/lib/eligibility";
 import { downloadInterestedStudentsPdf } from "@/lib/pdf";
@@ -48,6 +50,8 @@ export function AdminDashboardClient({
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
     initialCompanies[0]?.id ?? null
   );
+  const [companySortBy, setCompanySortBy] =
+    useState<CompanySortOption>("posted_desc");
 
   // Post Company Modal State
   const [showPostModal, setShowPostModal] = useState(false);
@@ -108,6 +112,11 @@ export function AdminDashboardClient({
   const selectedCompany = useMemo(
     () => companies.find((c) => c.id === selectedCompanyId) ?? null,
     [companies, selectedCompanyId]
+  );
+
+  const sortedCompanies = useMemo(
+    () => sortCompanies(companies, companySortBy),
+    [companies, companySortBy]
   );
 
   const selectedInterestedStudents = useMemo(() => {
@@ -397,20 +406,26 @@ export function AdminDashboardClient({
           <div className="grid gap-6 lg:grid-cols-12">
             {/* Left Sidebar: Company List */}
             <div className="lg:col-span-4 space-y-3">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <h2 className="text-sm font-bold uppercase tracking-wider text-slate-600">
                   Company Drives
                 </h2>
-                <button
-                  type="button"
-                  onClick={() => setShowPostModal(true)}
-                  className="text-xs font-semibold text-blue-600 hover:underline cursor-pointer"
-                >
-                  + Add New
-                </button>
+                <div className="flex items-center gap-2">
+                  <CompanySortSelect
+                    value={companySortBy}
+                    onChange={setCompanySortBy}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPostModal(true)}
+                    className="text-xs font-semibold text-blue-600 hover:underline cursor-pointer"
+                  >
+                    + Add New
+                  </button>
+                </div>
               </div>
 
-              {companies.length === 0 ? (
+              {sortedCompanies.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center">
                   <Building2 className="mx-auto h-8 w-8 text-slate-400" />
                   <p className="mt-2 text-sm font-semibold text-slate-800">
@@ -426,7 +441,7 @@ export function AdminDashboardClient({
                 </div>
               ) : (
                 <div className="space-y-2.5">
-                  {companies.map((company) => {
+                  {sortedCompanies.map((company) => {
                     const stats = countsByCompany.get(company.id);
                     const interestedCount = stats?.interested.length ?? 0;
                     const notInterestedCount = stats?.notInterestedCount ?? 0;
@@ -474,6 +489,22 @@ export function AdminDashboardClient({
                             {company.package_ctc}
                           </span>
                         </div>
+                        <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400">
+                          <span>
+                            Posted{" "}
+                            {new Date(company.created_at).toLocaleDateString(
+                              "en-IN",
+                              { dateStyle: "medium" }
+                            )}
+                          </span>
+                          <span>
+                            Due{" "}
+                            {new Date(company.deadline).toLocaleDateString(
+                              "en-IN",
+                              { dateStyle: "medium" }
+                            )}
+                          </span>
+                        </div>
                       </button>
                     );
                   })}
@@ -503,6 +534,13 @@ export function AdminDashboardClient({
                           <CalendarClock className="h-3.5 w-3.5 text-slate-400" />
                           Deadline:{" "}
                           {new Date(selectedCompany.deadline).toLocaleString(
+                            "en-IN",
+                            { dateStyle: "medium", timeStyle: "short" }
+                          )}
+                        </span>
+                        <span className="text-slate-500">
+                          Posted:{" "}
+                          {new Date(selectedCompany.created_at).toLocaleString(
                             "en-IN",
                             { dateStyle: "medium", timeStyle: "short" }
                           )}

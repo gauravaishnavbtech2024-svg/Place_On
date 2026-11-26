@@ -22,6 +22,8 @@ import {
   XCircle,
 } from "lucide-react";
 import { PlaceOnLogo } from "./PlaceOnLogo";
+import { CompanySortSelect } from "./CompanySortSelect";
+import { sortCompanies, type CompanySortOption } from "@/lib/companySort";
 import { BRANCH_SUGGESTIONS, COURSES, getCourseConfig } from "@/lib/constants";
 import {
   calculateAverageScore,
@@ -98,6 +100,7 @@ export function StudentDashboardClient({
   const [driveFilter, setDriveFilter] = useState<
     "all" | "open" | "eligible" | "interested"
   >("all");
+  const [sortBy, setSortBy] = useState<CompanySortOption>("posted_desc");
   const [respondingId, setRespondingId] = useState<string | null>(null);
   const [driveError, setDriveError] = useState<string | null>(null);
 
@@ -274,7 +277,7 @@ export function StudentDashboardClient({
 
   const filteredCompanies = useMemo(() => {
     const now = Date.now();
-    return companies.filter((company) => {
+    const filtered = companies.filter((company) => {
       const isOpen = new Date(company.deadline).getTime() > now;
       const eligibility = checkStudentEligibility(student, company);
       const myStatus = responseByCompany.get(company.id);
@@ -284,7 +287,8 @@ export function StudentDashboardClient({
       if (driveFilter === "interested") return myStatus === "interested";
       return true;
     });
-  }, [companies, driveFilter, student, responseByCompany]);
+    return sortCompanies(filtered, sortBy);
+  }, [companies, driveFilter, sortBy, student, responseByCompany]);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -409,28 +413,32 @@ export function StudentDashboardClient({
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-slate-200 bg-white p-1">
-                {(
-                  [
-                    { id: "all", label: "All" },
-                    { id: "open", label: "Open" },
-                    { id: "eligible", label: "Eligible" },
-                    { id: "interested", label: "Interested" },
-                  ] as const
-                ).map((tab) => (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    onClick={() => setDriveFilter(tab.id)}
-                    className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${
-                      driveFilter === tab.id
-                        ? "bg-blue-600 text-white"
-                        : "text-slate-600 hover:bg-slate-100"
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-slate-200 bg-white p-1">
+                  {(
+                    [
+                      { id: "all", label: "All" },
+                      { id: "open", label: "Open" },
+                      { id: "eligible", label: "Eligible" },
+                      { id: "interested", label: "Interested" },
+                    ] as const
+                  ).map((tab) => (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => setDriveFilter(tab.id)}
+                      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${
+                        driveFilter === tab.id
+                          ? "bg-blue-600 text-white"
+                          : "text-slate-600 hover:bg-slate-100"
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+
+                <CompanySortSelect value={sortBy} onChange={setSortBy} />
               </div>
             </div>
 
@@ -511,6 +519,13 @@ export function StudentDashboardClient({
                               dateStyle: "medium",
                               timeStyle: "short",
                             })}
+                          </span>
+                          <span className="text-slate-500">
+                            Posted:{" "}
+                            {new Date(company.created_at).toLocaleDateString(
+                              "en-IN",
+                              { dateStyle: "medium" }
+                            )}
                           </span>
                         </div>
 
