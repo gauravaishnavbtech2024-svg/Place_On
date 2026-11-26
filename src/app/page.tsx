@@ -9,6 +9,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { AppHeader } from "@/components/AppHeader";
+import { SignOutButton } from "@/components/SignOutButton";
 import { ALLOWED_STUDENT_DOMAIN } from "@/lib/constants";
 import { isAdminEmail, isAllowedStudentEmail } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -63,14 +64,7 @@ export default async function HomePage() {
                   Admin Dashboard
                 </Link>
               )}
-              <form action="/api/auth/signout" method="POST">
-                <button
-                  type="submit"
-                  className="rounded-lg border border-slate-300 bg-[#fdfeff] px-3 py-2 text-xs sm:text-sm font-medium text-slate-700 hover:bg-slate-50 cursor-pointer"
-                >
-                  Sign Out
-                </button>
-              </form>
+              <SignOutButton />
             </div>
           ) : (
             <span className="rounded-full border border-[#2f228c]/20 bg-[#2f228c]/[0.06] px-3 py-1 text-xs font-semibold text-[#2f228c]">

@@ -12,7 +12,6 @@ import {
   FileText,
   GraduationCap,
   Loader2,
-  LogOut,
   MapPin,
   Sparkles,
   ThumbsDown,
@@ -22,6 +21,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { AppHeader } from "./AppHeader";
+import { SignOutButton } from "./SignOutButton";
 import { CompanySortSelect } from "./CompanySortSelect";
 import { sortCompanies, type CompanySortOption } from "@/lib/companySort";
 import { parseCompanyRoles } from "@/lib/companyValidation";
@@ -328,15 +328,7 @@ export function StudentDashboardClient({
               )}
             </span>
 
-            <form action="/api/auth/signout" method="POST">
-              <button
-                type="submit"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-[#fdfeff] px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer"
-              >
-                <LogOut className="h-3.5 w-3.5" />
-                Sign Out
-              </button>
-            </form>
+            <SignOutButton />
           </>
         }
       />
