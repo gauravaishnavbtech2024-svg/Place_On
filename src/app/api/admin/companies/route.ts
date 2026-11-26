@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isAdminEmail, normalizeEmail } from "@/lib/auth";
+import { parseCompanyPayload } from "@/lib/companyValidation";
 import {
   sendCompanyAnnouncementEmails,
   type EmailDispatchResult,
@@ -7,12 +8,6 @@ import {
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import type { Company } from "@/lib/types";
-
-function parseOptionalNumber(val: unknown): number | null {
-  if (val === null || val === undefined || val === "") return null;
-  const num = Number(val);
-  return Number.isFinite(num) ? num : null;
-}
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -24,54 +19,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await request.json();
-  const name = String(body.name ?? "").trim();
-  const role = String(body.role ?? "").trim();
-  const packageCtc = String(body.package_ctc ?? "").trim();
-  const location = String(body.location ?? "").trim() || "On-site";
-  const description = String(body.description ?? "").trim();
-  const deadlineRaw = String(body.deadline ?? "").trim();
-  const allowedCourses: string[] = Array.isArray(body.allowed_courses)
-    ? body.allowed_courses.map(String).filter(Boolean)
-    : [];
-  const minTenth = parseOptionalNumber(body.min_tenth_percentage);
-  const minTwelfth = parseOptionalNumber(body.min_twelfth_percentage);
-  const minSemCgpa = parseOptionalNumber(body.min_sem_cgpa);
+  const body = (await request.json()) as Record<string, unknown>;
+  const parsed = parseCompanyPayload(body);
+  if ("error" in parsed) {
+    return NextResponse.json({ error: parsed.error }, { status: 400 });
+  }
+
   const sendEmail = body.send_email !== false;
-
-  if (!name || !role || !packageCtc || !description || !deadlineRaw) {
-    return NextResponse.json(
-      {
-        error:
-          "Company name, role, package, description, and deadline are required.",
-      },
-      { status: 400 }
-    );
-  }
-
-  const deadlineDate = new Date(deadlineRaw);
-  if (Number.isNaN(deadlineDate.getTime())) {
-    return NextResponse.json(
-      { error: "Invalid deadline date/time." },
-      { status: 400 }
-    );
-  }
-
   const client = createAdminClient() ?? supabase;
 
   const { data: company, error } = await client
     .from("companies")
     .insert({
-      name,
-      role,
-      package_ctc: packageCtc,
-      location,
-      description,
-      deadline: deadlineDate.toISOString(),
-      allowed_courses: allowedCourses,
-      min_tenth_percentage: minTenth,
-      min_twelfth_percentage: minTwelfth,
-      min_sem_cgpa: minSemCgpa,
+      ...parsed.data,
       created_by: normalizeEmail(user.email),
     })
     .select("*")

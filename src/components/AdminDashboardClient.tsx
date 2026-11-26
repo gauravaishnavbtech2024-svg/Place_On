@@ -13,6 +13,7 @@ import {
   LogOut,
   Mail,
   MapPin,
+  Pencil,
   Plus,
   Search,
   Trash2,
@@ -53,8 +54,9 @@ export function AdminDashboardClient({
   const [companySortBy, setCompanySortBy] =
     useState<CompanySortOption>("posted_desc");
 
-  // Post Company Modal State
+  // Post / Edit Company Modal State
   const [showPostModal, setShowPostModal] = useState(false);
+  const [editingCompany, setEditingCompany] = useState<Company | null>(null);
   const [companyName, setCompanyName] = useState("");
   const [companyRole, setCompanyRole] = useState("");
   const [packageCtc, setPackageCtc] = useState("");
@@ -163,14 +165,69 @@ export function AdminDashboardClient({
     );
   }
 
-  async function handlePostCompany(e: React.FormEvent) {
+  function toDateTimeLocalValue(isoString: string): string {
+    const date = new Date(isoString);
+    if (Number.isNaN(date.getTime())) return "";
+    const offsetMinutes = date.getTimezoneOffset();
+    const local = new Date(date.getTime() - offsetMinutes * 60 * 1000);
+    return local.toISOString().slice(0, 16);
+  }
+
+  function openCreateModal() {
+    setEditingCompany(null);
+    setCompanyName("");
+    setCompanyRole("");
+    setPackageCtc("");
+    setLocation("");
+    setDeadline("");
+    setDescription("");
+    setAllowedCourses([]);
+    setMinTenth("");
+    setMinTwelfth("");
+    setMinSemCgpa("");
+    setSendEmail(true);
+    setShowPostModal(true);
+  }
+
+  function openEditModal(company: Company) {
+    setEditingCompany(company);
+    setCompanyName(company.name);
+    setCompanyRole(company.role);
+    setPackageCtc(company.package_ctc);
+    setLocation(company.location);
+    setDeadline(toDateTimeLocalValue(company.deadline));
+    setDescription(company.description);
+    setAllowedCourses(company.allowed_courses ?? []);
+    setMinTenth(
+      company.min_tenth_percentage !== null
+        ? String(company.min_tenth_percentage)
+        : ""
+    );
+    setMinTwelfth(
+      company.min_twelfth_percentage !== null
+        ? String(company.min_twelfth_percentage)
+        : ""
+    );
+    setMinSemCgpa(
+      company.min_sem_cgpa !== null ? String(company.min_sem_cgpa) : ""
+    );
+    setSendEmail(false);
+    setShowPostModal(true);
+  }
+
+  async function handleSaveCompany(e: React.FormEvent) {
     e.preventDefault();
     setPostingCompany(true);
     setBanner(null);
 
+    const isEditing = editingCompany !== null;
+    const endpoint = isEditing
+      ? `/api/admin/companies/${editingCompany.id}`
+      : "/api/admin/companies";
+
     try {
-      const res = await fetch("/api/admin/companies", {
-        method: "POST",
+      const res = await fetch(endpoint, {
+        method: isEditing ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: companyName,
@@ -191,40 +248,45 @@ export function AdminDashboardClient({
       if (!res.ok) {
         setBanner({
           type: "error",
-          text: json.error || "Could not create company listing.",
+          text:
+            json.error ||
+            (isEditing
+              ? "Could not update company listing."
+              : "Could not create company listing."),
         });
       } else {
-        const created = json.company as Company;
-        setCompanies((prev) => [created, ...prev]);
-        setSelectedCompanyId(created.id);
+        const saved = json.company as Company;
+        if (isEditing) {
+          setCompanies((prev) =>
+            prev.map((c) => (c.id === saved.id ? saved : c))
+          );
+        } else {
+          setCompanies((prev) => [saved, ...prev]);
+          setSelectedCompanyId(saved.id);
+        }
         setShowPostModal(false);
-
-        // Reset modal fields
-        setCompanyName("");
-        setCompanyRole("");
-        setPackageCtc("");
-        setLocation("");
-        setDeadline("");
-        setDescription("");
-        setAllowedCourses([]);
-        setMinTenth("");
-        setMinTwelfth("");
-        setMinSemCgpa("");
+        setEditingCompany(null);
 
         const emailInfo = json.emailResult;
-        const emailNote = emailInfo?.skippedReason
-          ? ` (${emailInfo.skippedReason})`
-          : ` Automated email sent to ${emailInfo?.sentCount ?? 0} registered student(s).`;
+        const emailNote = emailInfo
+          ? emailInfo.skippedReason
+            ? ` (${emailInfo.skippedReason})`
+            : ` Automated email sent to ${emailInfo.sentCount ?? 0} registered student(s).`
+          : "";
 
         setBanner({
           type: "success",
-          text: `Listed "${created.name}" successfully.${emailNote}`,
+          text: isEditing
+            ? `Updated "${saved.name}" successfully.${emailNote}`
+            : `Listed "${saved.name}" successfully.${emailNote}`,
         });
       }
     } catch {
       setBanner({
         type: "error",
-        text: "Network error while posting company.",
+        text: isEditing
+          ? "Network error while updating company."
+          : "Network error while posting company.",
       });
     } finally {
       setPostingCompany(false);
@@ -272,7 +334,7 @@ export function AdminDashboardClient({
 
             <button
               type="button"
-              onClick={() => setShowPostModal(true)}
+              onClick={openCreateModal}
               className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-3.5 py-2 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-blue-700 cursor-pointer"
             >
               <Plus className="h-4 w-4" />
@@ -417,7 +479,7 @@ export function AdminDashboardClient({
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPostModal(true)}
+                    onClick={openCreateModal}
                     className="text-xs font-semibold text-blue-600 hover:underline cursor-pointer"
                   >
                     + Add New
@@ -433,7 +495,7 @@ export function AdminDashboardClient({
                   </p>
                   <button
                     type="button"
-                    onClick={() => setShowPostModal(true)}
+                    onClick={openCreateModal}
                     className="mt-3 rounded-lg bg-blue-600 px-3.5 py-2 text-xs font-semibold text-white hover:bg-blue-700 cursor-pointer"
                   >
                     Post First Company
@@ -567,6 +629,15 @@ export function AdminDashboardClient({
                       >
                         <Download className="h-4 w-4" />
                         Download Interested List (PDF)
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => openEditModal(selectedCompany)}
+                        className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                      >
+                        <Pencil className="h-4 w-4" />
+                        Edit
                       </button>
 
                       <button
@@ -847,30 +918,36 @@ export function AdminDashboardClient({
         )}
       </main>
 
-      {/* POST COMPANY MODAL */}
+      {/* POST / EDIT COMPANY MODAL */}
       {showPostModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
           <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl">
             <div className="mb-5 flex items-center justify-between border-b border-slate-100 pb-4">
               <div>
                 <h2 className="text-lg font-bold text-slate-900">
-                  Post New Company Drive
+                  {editingCompany
+                    ? `Edit ${editingCompany.name}`
+                    : "Post New Company Drive"}
                 </h2>
                 <p className="text-xs text-slate-500">
-                  Published immediately to Student dashboards &amp; emailed to
-                  registered students.
+                  {editingCompany
+                    ? "Updates take effect immediately on Student and Admin dashboards."
+                    : "Published immediately to Student dashboards & emailed to registered students."}
                 </p>
               </div>
               <button
                 type="button"
-                onClick={() => setShowPostModal(false)}
+                onClick={() => {
+                  setShowPostModal(false);
+                  setEditingCompany(null);
+                }}
                 className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <form onSubmit={handlePostCompany} className="space-y-4">
+            <form onSubmit={handleSaveCompany} className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">
@@ -1044,7 +1121,9 @@ export function AdminDashboardClient({
                   className="h-4 w-4 rounded border-slate-300 text-blue-600"
                 />
                 <span>
-                  Send automated announcement email to all{" "}
+                  {editingCompany
+                    ? "Send update notification email to all "
+                    : "Send automated announcement email to all "}
                   <strong>{students.length}</strong> registered student(s) via
                   Resend
                 </span>
@@ -1053,7 +1132,10 @@ export function AdminDashboardClient({
               <div className="flex items-center justify-end gap-3 border-t border-slate-100 pt-4">
                 <button
                   type="button"
-                  onClick={() => setShowPostModal(false)}
+                  onClick={() => {
+                    setShowPostModal(false);
+                    setEditingCompany(null);
+                  }}
                   className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer"
                 >
                   Cancel
@@ -1066,7 +1148,13 @@ export function AdminDashboardClient({
                   {postingCompany && (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   )}
-                  {postingCompany ? "Publishing..." : "Publish Company"}
+                  {postingCompany
+                    ? editingCompany
+                      ? "Saving..."
+                      : "Publishing..."
+                    : editingCompany
+                    ? "Save Changes"
+                    : "Publish Company"}
                 </button>
               </div>
             </form>
