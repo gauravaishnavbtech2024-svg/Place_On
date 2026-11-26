@@ -18,13 +18,42 @@ function parseOptionalNumber(val: unknown): number | null {
 }
 
 /**
+ * Splits a stored role string (comma-separated) into individual trimmed roles.
+ */
+export function parseCompanyRoles(roleText?: string | null): string[] {
+  if (!roleText) return [];
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const part of roleText.split(",")) {
+    const trimmed = part.trim();
+    if (!trimmed) continue;
+    const key = trimmed.toLowerCase();
+    if (!seen.has(key)) {
+      seen.add(key);
+      result.push(trimmed);
+    }
+  }
+  return result;
+}
+
+/**
+ * Normalizes an array of job roles into a single comma-separated string.
+ */
+export function formatCompanyRoles(roles: string[]): string {
+  return parseCompanyRoles(roles.join(",")).join(", ");
+}
+
+/**
  * Validates and normalizes request body fields for creating or updating a company drive.
  */
 export function parseCompanyPayload(
   body: Record<string, unknown>
 ): { data: ValidatedCompanyPayload } | { error: string } {
   const name = String(body.name ?? "").trim();
-  const role = String(body.role ?? "").trim();
+  const rawRoles = Array.isArray(body.roles)
+    ? body.roles.map(String)
+    : [String(body.role ?? "")];
+  const role = formatCompanyRoles(rawRoles);
   const packageCtc = String(body.package_ctc ?? "").trim();
   const location = String(body.location ?? "").trim() || "On-site";
   const description = String(body.description ?? "").trim();
@@ -39,7 +68,7 @@ export function parseCompanyPayload(
   if (!name || !role || !packageCtc || !description || !deadlineRaw) {
     return {
       error:
-        "Company name, role, package, description, and deadline are required.",
+        "Company name, at least one job role, package, description, and deadline are required.",
     };
   }
 

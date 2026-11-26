@@ -23,6 +23,7 @@ import {
 import { AppHeader } from "./AppHeader";
 import { CompanySortSelect } from "./CompanySortSelect";
 import { sortCompanies, type CompanySortOption } from "@/lib/companySort";
+import { parseCompanyRoles } from "@/lib/companyValidation";
 import { COURSES } from "@/lib/constants";
 import { formatSemesterScores } from "@/lib/eligibility";
 import { downloadInterestedStudentsPdf } from "@/lib/pdf";
@@ -58,7 +59,7 @@ export function AdminDashboardClient({
   const [showPostModal, setShowPostModal] = useState(false);
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
   const [companyName, setCompanyName] = useState("");
-  const [companyRole, setCompanyRole] = useState("");
+  const [companyRoles, setCompanyRoles] = useState<string[]>([""]);
   const [packageCtc, setPackageCtc] = useState("");
   const [location, setLocation] = useState("");
   const [deadline, setDeadline] = useState("");
@@ -176,7 +177,7 @@ export function AdminDashboardClient({
   function openCreateModal() {
     setEditingCompany(null);
     setCompanyName("");
-    setCompanyRole("");
+    setCompanyRoles([""]);
     setPackageCtc("");
     setLocation("");
     setDeadline("");
@@ -190,9 +191,10 @@ export function AdminDashboardClient({
   }
 
   function openEditModal(company: Company) {
+    const parsedRoles = parseCompanyRoles(company.role);
     setEditingCompany(company);
     setCompanyName(company.name);
-    setCompanyRole(company.role);
+    setCompanyRoles(parsedRoles.length > 0 ? parsedRoles : [""]);
     setPackageCtc(company.package_ctc);
     setLocation(company.location);
     setDeadline(toDateTimeLocalValue(company.deadline));
@@ -215,6 +217,22 @@ export function AdminDashboardClient({
     setShowPostModal(true);
   }
 
+  function updateRoleAt(index: number, value: string) {
+    setCompanyRoles((prev) =>
+      prev.map((item, idx) => (idx === index ? value : item))
+    );
+  }
+
+  function addRoleField() {
+    setCompanyRoles((prev) => [...prev, ""]);
+  }
+
+  function removeRoleAt(index: number) {
+    setCompanyRoles((prev) =>
+      prev.length <= 1 ? prev : prev.filter((_, idx) => idx !== index)
+    );
+  }
+
   async function handleSaveCompany(e: React.FormEvent) {
     e.preventDefault();
     setPostingCompany(true);
@@ -231,7 +249,7 @@ export function AdminDashboardClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: companyName,
-          role: companyRole,
+          roles: companyRoles,
           package_ctc: packageCtc,
           location,
           deadline,
@@ -528,9 +546,16 @@ export function AdminDashboardClient({
                             <h3 className="text-sm font-bold text-[#18162b]">
                               {company.name}
                             </h3>
-                            <p className="text-xs font-semibold text-[#2f228c]">
-                              {company.role}
-                            </p>
+                            <div className="mt-1 flex flex-wrap gap-1">
+                              {parseCompanyRoles(company.role).map((r) => (
+                                <span
+                                  key={r}
+                                  className="inline-block rounded-md bg-[#2f228c]/[0.08] px-1.5 py-0.5 text-[11px] font-semibold text-[#2f228c]"
+                                >
+                                  {r}
+                                </span>
+                              ))}
+                            </div>
                           </div>
                           <span
                             className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
@@ -584,10 +609,19 @@ export function AdminDashboardClient({
                       <h2 className="text-2xl font-bold text-[#18162b]">
                         {selectedCompany.name}
                       </h2>
-                      <p className="text-sm font-semibold text-[#2f228c]">
-                        {selectedCompany.role} &bull;{" "}
-                        {selectedCompany.package_ctc}
-                      </p>
+                      <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                        {parseCompanyRoles(selectedCompany.role).map((r) => (
+                          <span
+                            key={r}
+                            className="inline-block rounded-lg bg-[#2f228c]/[0.08] px-2.5 py-0.5 text-xs font-semibold text-[#2f228c]"
+                          >
+                            {r}
+                          </span>
+                        ))}
+                        <span className="text-sm font-semibold text-[#d7201c]">
+                          &bull; {selectedCompany.package_ctc}
+                        </span>
+                      </div>
                       <div className="mt-2 flex flex-wrap gap-3 text-xs text-slate-600">
                         <span className="inline-flex items-center gap-1">
                           <MapPin className="h-3.5 w-3.5 text-slate-400" />
@@ -966,20 +1000,6 @@ export function AdminDashboardClient({
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Job Role / Position *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={companyRole}
-                    onChange={(e) => setCompanyRole(e.target.value)}
-                    placeholder="e.g., Software Development Engineer"
-                    className="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
                     Package (CTC) *
                   </label>
                   <input
@@ -990,6 +1010,51 @@ export function AdminDashboardClient({
                     placeholder="e.g., 8.5 LPA"
                     className="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm"
                   />
+                </div>
+
+                <div className="sm:col-span-2 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-semibold text-slate-700">
+                      Job Role / Position(s) *
+                    </label>
+                    <button
+                      type="button"
+                      onClick={addRoleField}
+                      className="inline-flex items-center gap-1 rounded-lg border border-[#2f228c]/25 bg-[#2f228c]/[0.06] px-2.5 py-1 text-xs font-semibold text-[#2f228c] hover:bg-[#2f228c]/10 cursor-pointer"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                      Add Role
+                    </button>
+                  </div>
+
+                  <div className="space-y-2">
+                    {companyRoles.map((roleVal, idx) => (
+                      <div key={idx} className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          required={idx === 0}
+                          value={roleVal}
+                          onChange={(e) => updateRoleAt(idx, e.target.value)}
+                          placeholder={
+                            idx === 0
+                              ? "e.g., Software Development Engineer"
+                              : `Additional Role ${idx + 1} (e.g., Data Analyst)`
+                          }
+                          className="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm"
+                        />
+                        {companyRoles.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => removeRoleAt(idx)}
+                            aria-label={`Remove role ${idx + 1}`}
+                            className="rounded-xl border border-slate-200 p-2 text-slate-400 hover:border-[#d7201c]/30 hover:text-[#d7201c] cursor-pointer"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 <div>
@@ -1006,7 +1071,7 @@ export function AdminDashboardClient({
                   />
                 </div>
 
-                <div className="sm:col-span-2">
+                <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">
                     Application Deadline *
                   </label>

@@ -24,6 +24,7 @@ import {
 import { AppHeader } from "./AppHeader";
 import { CompanySortSelect } from "./CompanySortSelect";
 import { sortCompanies, type CompanySortOption } from "@/lib/companySort";
+import { parseCompanyRoles } from "@/lib/companyValidation";
 import { BRANCH_SUGGESTIONS, COURSES, getCourseConfig } from "@/lib/constants";
 import {
   calculateAverageScore,
@@ -494,9 +495,16 @@ export function StudentDashboardClient({
                                 {isOpen ? "Open" : "Closed"}
                               </span>
                             </div>
-                            <p className="text-sm font-semibold text-[#2f228c] mt-0.5">
-                              {company.role}
-                            </p>
+                            <div className="mt-1.5 flex flex-wrap gap-1.5">
+                              {parseCompanyRoles(company.role).map((r) => (
+                                <span
+                                  key={r}
+                                  className="inline-block rounded-md bg-[#2f228c]/[0.08] px-2 py-0.5 text-xs font-semibold text-[#2f228c]"
+                                >
+                                  {r}
+                                </span>
+                              ))}
+                            </div>
                           </div>
 
                           <div className="rounded-xl bg-[#2f228c]/[0.05] px-3 py-1.5 text-right border border-[#2f228c]/15">
