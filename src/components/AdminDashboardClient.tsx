@@ -15,7 +15,6 @@ import {
   MapPin,
   Plus,
   Search,
-  ShieldCheck,
   Trash2,
   Users,
   X,
@@ -24,19 +23,13 @@ import { PlaceOnLogo } from "./PlaceOnLogo";
 import { COURSES } from "@/lib/constants";
 import { formatSemesterScores } from "@/lib/eligibility";
 import { downloadInterestedStudentsPdf } from "@/lib/pdf";
-import type {
-  AdminWhitelistEntry,
-  Company,
-  CompanyResponse,
-  StudentProfile,
-} from "@/lib/types";
+import type { Company, CompanyResponse, StudentProfile } from "@/lib/types";
 
 interface AdminDashboardClientProps {
   adminEmail: string;
   initialCompanies: Company[];
   initialStudents: StudentProfile[];
   initialResponses: CompanyResponse[];
-  initialWhitelist: AdminWhitelistEntry[];
 }
 
 export function AdminDashboardClient({
@@ -44,17 +37,14 @@ export function AdminDashboardClient({
   initialCompanies,
   initialStudents,
   initialResponses,
-  initialWhitelist,
 }: AdminDashboardClientProps) {
   const [companies, setCompanies] = useState<Company[]>(initialCompanies);
   const [students] = useState<StudentProfile[]>(initialStudents);
   const [responses] = useState<CompanyResponse[]>(initialResponses);
-  const [whitelist, setWhitelist] =
-    useState<AdminWhitelistEntry[]>(initialWhitelist);
 
-  const [activeTab, setActiveTab] = useState<
-    "companies" | "students" | "admins"
-  >("companies");
+  const [activeTab, setActiveTab] = useState<"companies" | "students">(
+    "companies"
+  );
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
     initialCompanies[0]?.id ?? null
   );
@@ -85,10 +75,6 @@ export function AdminDashboardClient({
   const [completionFilter, setCompletionFilter] = useState<
     "ALL" | "COMPLETED" | "INCOMPLETE"
   >("ALL");
-
-  // Whitelist State
-  const [newAdminEmail, setNewAdminEmail] = useState("");
-  const [whitelistBusy, setWhitelistBusy] = useState(false);
 
   const studentById = useMemo(() => {
     const map = new Map<string, StudentProfile>();
@@ -260,69 +246,6 @@ export function AdminDashboardClient({
     }
   }
 
-  async function handleAddAdmin(e: React.FormEvent) {
-    e.preventDefault();
-    if (!newAdminEmail.trim()) return;
-    setWhitelistBusy(true);
-    setBanner(null);
-
-    try {
-      const res = await fetch("/api/admin/whitelist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: newAdminEmail }),
-      });
-      const json = await res.json();
-      if (!res.ok) {
-        setBanner({
-          type: "error",
-          text: json.error || "Failed to add admin email.",
-        });
-      } else {
-        setWhitelist((prev) => {
-          const exists = prev.some((w) => w.email === json.entry.email);
-          if (exists) return prev;
-          return [...prev, { ...json.entry, source: "database" }];
-        });
-        setNewAdminEmail("");
-        setBanner({
-          type: "success",
-          text: `Added ${json.entry.email} to admin whitelist.`,
-        });
-      }
-    } finally {
-      setWhitelistBusy(false);
-    }
-  }
-
-  async function handleRemoveAdmin(email: string) {
-    setWhitelistBusy(true);
-    setBanner(null);
-
-    try {
-      const res = await fetch("/api/admin/whitelist", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      const json = await res.json();
-      if (!res.ok) {
-        setBanner({
-          type: "error",
-          text: json.error || "Could not remove admin email.",
-        });
-      } else {
-        setWhitelist((prev) => prev.filter((w) => w.email !== email));
-        setBanner({
-          type: "success",
-          text: `Removed ${email} from admin whitelist.`,
-        });
-      }
-    } finally {
-      setWhitelistBusy(false);
-    }
-  }
-
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
@@ -466,19 +389,6 @@ export function AdminDashboardClient({
           >
             <Users className="h-4 w-4" />
             All Registered Students ({students.length})
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab("admins")}
-            className={`inline-flex items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-semibold transition-colors cursor-pointer ${
-              activeTab === "admins"
-                ? "border-blue-600 text-blue-600"
-                : "border-transparent text-slate-500 hover:text-slate-800"
-            }`}
-          >
-            <ShieldCheck className="h-4 w-4" />
-            Admin Whitelist
           </button>
         </div>
 
@@ -895,76 +805,6 @@ export function AdminDashboardClient({
                 </table>
               </div>
             )}
-          </div>
-        )}
-
-        {/* TAB 3: ADMIN WHITELIST */}
-        {activeTab === "admins" && (
-          <div className="mx-auto max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-5">
-            <div>
-              <h2 className="text-lg font-bold text-slate-900">
-                Authorized Admin Emails
-              </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Only emails listed here or in the{" "}
-                <code className="rounded bg-slate-100 px-1 py-0.5">
-                  ADMIN_EMAILS
-                </code>{" "}
-                environment variable can sign into the Admin portal.
-              </p>
-            </div>
-
-            <form onSubmit={handleAddAdmin} className="flex gap-2">
-              <input
-                type="email"
-                required
-                value={newAdminEmail}
-                onChange={(e) => setNewAdminEmail(e.target.value)}
-                placeholder="coordinator@iujaipur.edu.in"
-                className="flex-1 rounded-xl border border-slate-300 px-3.5 py-2 text-sm text-slate-900 focus:border-blue-500 focus:outline-none"
-              />
-              <button
-                type="submit"
-                disabled={whitelistBusy}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-4 py-2 text-xs font-semibold text-white hover:bg-slate-800 disabled:opacity-60 cursor-pointer"
-              >
-                {whitelistBusy && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-                Add Admin
-              </button>
-            </form>
-
-            <div className="divide-y divide-slate-100 rounded-xl border border-slate-200">
-              {whitelist.map((entry) => (
-                <div
-                  key={entry.email}
-                  className="flex items-center justify-between px-4 py-3 text-sm"
-                >
-                  <div>
-                    <span className="font-semibold text-slate-900">
-                      {entry.email}
-                    </span>
-                    <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold uppercase text-slate-600">
-                      {entry.source === "env" || entry.source === "both"
-                        ? "ENV Config"
-                        : "Database"}
-                    </span>
-                  </div>
-
-                  {entry.source !== "env" &&
-                    entry.source !== "both" &&
-                    entry.email !== adminEmail && (
-                      <button
-                        type="button"
-                        disabled={whitelistBusy}
-                        onClick={() => handleRemoveAdmin(entry.email)}
-                        className="text-xs font-semibold text-red-600 hover:underline cursor-pointer"
-                      >
-                        Remove
-                      </button>
-                    )}
-                </div>
-              ))}
-            </div>
           </div>
         )}
       </main>

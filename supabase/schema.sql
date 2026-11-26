@@ -233,3 +233,13 @@ using (
   bucket_id = 'resumes'
   and (storage.foldername(name))[1] = auth.uid()::text
 );
+
+-- 9. Explicit Schema & Table Grants (RLS still enforces row-level access)
+grant usage on schema public to authenticated, service_role;
+grant select, insert, update, delete on table public.admin_whitelist to authenticated, service_role;
+grant select, insert, update on table public.students to authenticated;
+grant all on table public.students to service_role;
+grant select, insert, update, delete on table public.companies to authenticated, service_role;
+grant select, insert, update on table public.company_responses to authenticated;
+grant all on table public.company_responses to service_role;
+grant execute on function public.is_admin() to authenticated, service_role;
