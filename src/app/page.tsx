@@ -194,7 +194,16 @@ export default async function HomePage() {
       </main>
 
       <footer className="border-t border-slate-200/70 bg-white/60 py-4 text-center text-xs text-slate-500">
-        PlaceOn — Placement Monitoring System for IU Jaipur
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-4 px-4">
+          <span>PlaceOn — Placement Monitoring System for IU Jaipur</span>
+          <span>&bull;</span>
+          <Link href="/privacy" className="hover:text-slate-800 underline">
+            Privacy Policy
+          </Link>
+          <Link href="/terms" className="hover:text-slate-800 underline">
+            Terms of Service
+          </Link>
+        </div>
       </footer>
     </div>
   );
