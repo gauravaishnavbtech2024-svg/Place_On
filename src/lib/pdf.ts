@@ -14,9 +14,11 @@ export function downloadInterestedStudentsPdf(
     format: "a4",
   });
 
-  // Top Header Banner
-  doc.setFillColor(15, 23, 42); // slate-900
-  doc.rect(0, 0, 297, 28, "F");
+  // Top Header Banner (#2f228c + #d7201c accent strip)
+  doc.setFillColor(47, 34, 140); // #2f228c
+  doc.rect(0, 0, 297, 27, "F");
+  doc.setFillColor(215, 32, 28); // #d7201c
+  doc.rect(0, 27, 297, 1.5, "F");
 
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
@@ -96,13 +98,13 @@ export function downloadInterestedStudentsPdf(
       textColor: [30, 41, 59],
     },
     headStyles: {
-      fillColor: [37, 99, 235], // blue-600
-      textColor: [255, 255, 255],
+      fillColor: [47, 34, 140], // #2f228c
+      textColor: [253, 254, 255],
       fontStyle: "bold",
       fontSize: 8.5,
     },
     alternateRowStyles: {
-      fillColor: [248, 250, 252],
+      fillColor: [248, 248, 253],
     },
     columnStyles: {
       0: { cellWidth: 11, halign: "center" },
@@ -134,7 +136,7 @@ export function downloadInterestedStudentsPdf(
       if (data.section === "body" && data.column.index === 9) {
         const url = resumeUrls[data.row.index];
         if (url) {
-          doc.setTextColor(37, 99, 235);
+          doc.setTextColor(47, 34, 140);
         } else {
           doc.setTextColor(148, 163, 184);
         }

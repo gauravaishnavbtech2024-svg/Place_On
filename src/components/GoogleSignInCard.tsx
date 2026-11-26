@@ -57,26 +57,26 @@ export function GoogleSignInCard({ role, errorCode }: GoogleSignInCardProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/60 flex flex-col justify-center px-4 py-12">
+    <div className="min-h-screen border-t-[3px] border-t-[#d7201c] bg-[#fdfeff] bg-gradient-to-br from-[#fdfeff] via-[#2f228c]/[0.03] to-[#d7201c]/[0.04] flex flex-col justify-center px-4 py-12">
       <div className="mx-auto w-full max-w-md">
         <div className="mb-8 flex items-center justify-between">
           <PlaceOnLogo />
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-[#2f228c] transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             Change role
           </Link>
         </div>
 
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-8 shadow-xl shadow-slate-200/50">
+        <div className="rounded-2xl border border-slate-200 bg-[#fdfeff] p-8 shadow-xl shadow-[#2f228c]/[0.08]">
           <div className="mb-6 flex items-center gap-3">
             <div
-              className={`flex h-12 w-12 items-center justify-center rounded-xl ${
+              className={`flex h-12 w-12 items-center justify-center rounded-xl border ${
                 isStudent
-                  ? "bg-blue-50 text-blue-600 border border-blue-100"
-                  : "bg-indigo-50 text-indigo-600 border border-indigo-100"
+                  ? "bg-[#2f228c]/[0.08] text-[#2f228c] border-[#2f228c]/20"
+                  : "bg-[#d7201c]/[0.08] text-[#d7201c] border-[#d7201c]/20"
               }`}
             >
               {isStudent ? (
@@ -89,13 +89,13 @@ export function GoogleSignInCard({ role, errorCode }: GoogleSignInCardProps) {
               <span
                 className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                   isStudent
-                    ? "bg-blue-100 text-blue-700"
-                    : "bg-indigo-100 text-indigo-700"
+                    ? "bg-[#2f228c]/10 text-[#2f228c]"
+                    : "bg-[#d7201c]/10 text-[#d7201c]"
                 }`}
               >
                 {isStudent ? "Student Portal" : "Admin Portal"}
               </span>
-              <h1 className="mt-1 text-xl font-bold text-slate-900">
+              <h1 className="mt-1 text-xl font-bold text-[#18162b]">
                 {isStudent ? "Student Google Sign-In" : "Admin Google Sign-In"}
               </h1>
             </div>
@@ -105,7 +105,7 @@ export function GoogleSignInCard({ role, errorCode }: GoogleSignInCardProps) {
             {isStudent ? (
               <>
                 Sign in with your official university Google account ending in{" "}
-                <span className="font-semibold text-slate-900">
+                <span className="font-semibold text-[#2f228c]">
                   @{ALLOWED_STUDENT_DOMAIN}
                 </span>{" "}
                 to access your academic profile and placement drives.
@@ -113,7 +113,7 @@ export function GoogleSignInCard({ role, errorCode }: GoogleSignInCardProps) {
             ) : (
               <>
                 Restricted to authorized Placement Cell coordinators. Only{" "}
-                <span className="font-semibold text-slate-900">
+                <span className="font-semibold text-[#d7201c]">
                   whitelisted admin email IDs
                 </span>{" "}
                 can access the PlaceOn Admin dashboard.
@@ -122,8 +122,8 @@ export function GoogleSignInCard({ role, errorCode }: GoogleSignInCardProps) {
           </p>
 
           {displayError && (
-            <div className="mb-6 flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50 p-3.5 text-sm text-red-700">
-              <AlertCircle className="h-5 w-5 shrink-0 text-red-500 mt-0.5" />
+            <div className="mb-6 flex items-start gap-2.5 rounded-xl border border-[#d7201c]/30 bg-[#d7201c]/[0.06] p-3.5 text-sm text-[#b31915]">
+              <AlertCircle className="h-5 w-5 shrink-0 text-[#d7201c] mt-0.5" />
               <span>{displayError}</span>
             </div>
           )}
@@ -132,10 +132,10 @@ export function GoogleSignInCard({ role, errorCode }: GoogleSignInCardProps) {
             type="button"
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition-all hover:bg-slate-50 hover:border-slate-400 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+            className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-300 bg-[#fdfeff] px-4 py-3 text-sm font-semibold text-[#18162b] shadow-sm transition-all hover:border-[#2f228c]/40 hover:bg-[#2f228c]/[0.03] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
           >
             {loading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+              <Loader2 className="h-5 w-5 animate-spin text-[#2f228c]" />
             ) : (
               <svg className="h-5 w-5" viewBox="0 0 24 24">
                 <path

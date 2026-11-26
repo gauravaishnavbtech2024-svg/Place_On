@@ -74,14 +74,14 @@ export async function sendCompanyAnnouncementEmails(
   const portalUrl = `${appUrl.replace(/\/$/, "")}/student`;
 
   const html = `
-    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background-color: #f8fafc; color: #0f172a;">
-      <div style="background: #0f172a; color: #ffffff; padding: 20px 24px; border-radius: 12px 12px 0 0;">
-        <h1 style="margin: 0; font-size: 20px;">PlaceOn &mdash; IU Jaipur Placement Monitor</h1>
-        <p style="margin: 6px 0 0; font-size: 13px; color: #cbd5e1;">New Campus Placement Drive Notification</p>
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background-color: #fdfeff; color: #18162b;">
+      <div style="background: #2f228c; color: #fdfeff; padding: 20px 24px; border-bottom: 3px solid #d7201c; border-radius: 12px 12px 0 0;">
+        <h1 style="margin: 0; font-size: 20px;">PlaceOn &mdash; IcfaiTech (IU Jaipur) Placement Monitor</h1>
+        <p style="margin: 6px 0 0; font-size: 13px; color: #e2e8f0;">New Campus Placement Drive Notification</p>
       </div>
-      <div style="background: #ffffff; padding: 24px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 12px 12px;">
-        <h2 style="margin: 0 0 4px; font-size: 22px; color: #1e293b;">${escapeHtml(company.name)}</h2>
-        <p style="margin: 0 0 16px; font-size: 15px; font-weight: 600; color: #2563eb;">${escapeHtml(company.role)}</p>
+      <div style="background: #fdfeff; padding: 24px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 12px 12px;">
+        <h2 style="margin: 0 0 4px; font-size: 22px; color: #18162b;">${escapeHtml(company.name)}</h2>
+        <p style="margin: 0 0 16px; font-size: 15px; font-weight: 600; color: #d7201c;">${escapeHtml(company.role)}</p>
 
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 14px;">
           <tr>
@@ -106,7 +106,7 @@ export async function sendCompanyAnnouncementEmails(
           ${escapeHtml(company.description)}
         </div>
 
-        <a href="${escapeHtml(portalUrl)}" style="display: inline-block; background: #2563eb; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 14px; padding: 12px 20px; border-radius: 8px;">
+        <a href="${escapeHtml(portalUrl)}" style="display: inline-block; background: #2f228c; color: #fdfeff; text-decoration: none; font-weight: 600; font-size: 14px; padding: 12px 20px; border-radius: 8px;">
           Open PlaceOn &amp; Mark Interest
         </a>
 

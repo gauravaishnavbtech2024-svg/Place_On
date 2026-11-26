@@ -318,15 +318,15 @@ export function AdminDashboardClient({
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#fdfeff]">
       {/* Header */}
-      <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur-md">
+      <header className="sticky top-0 z-20 border-t-[3px] border-t-[#d7201c] border-b border-slate-200 bg-[#fdfeff]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
           <PlaceOnLogo href="/admin" subtitle="Admin Portal" />
 
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex flex-col items-end">
-              <span className="text-xs font-semibold text-indigo-700">
+              <span className="text-xs font-semibold text-[#d7201c]">
                 Placement Admin
               </span>
               <span className="text-xs text-slate-500">{adminEmail}</span>
@@ -335,7 +335,7 @@ export function AdminDashboardClient({
             <button
               type="button"
               onClick={openCreateModal}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-3.5 py-2 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-blue-700 cursor-pointer"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-[#2f228c] px-3.5 py-2 text-xs sm:text-sm font-semibold text-[#fdfeff] shadow-sm hover:bg-[#23186d] cursor-pointer"
             >
               <Plus className="h-4 w-4" />
               Post Company
@@ -383,14 +383,14 @@ export function AdminDashboardClient({
 
         {/* Stats Row */}
         <div className="grid gap-4 sm:grid-cols-3">
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-[#fdfeff] p-5 shadow-sm">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                 Registered Students
               </span>
-              <Users className="h-5 w-5 text-blue-600" />
+              <Users className="h-5 w-5 text-[#2f228c]" />
             </div>
-            <p className="mt-2 text-3xl font-extrabold text-slate-900">
+            <p className="mt-2 text-3xl font-extrabold text-[#18162b]">
               {students.length}
             </p>
             <p className="mt-1 text-xs text-slate-500">
@@ -398,14 +398,14 @@ export function AdminDashboardClient({
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-[#fdfeff] p-5 shadow-sm">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                 Listed Companies
               </span>
-              <Building2 className="h-5 w-5 text-indigo-600" />
+              <Building2 className="h-5 w-5 text-[#d7201c]" />
             </div>
-            <p className="mt-2 text-3xl font-extrabold text-slate-900">
+            <p className="mt-2 text-3xl font-extrabold text-[#18162b]">
               {companies.length}
             </p>
             <p className="mt-1 text-xs text-slate-500">
@@ -418,14 +418,14 @@ export function AdminDashboardClient({
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-[#fdfeff] p-5 shadow-sm">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                 Interested Applications
               </span>
-              <FileDown className="h-5 w-5 text-emerald-600" />
+              <FileDown className="h-5 w-5 text-[#2f228c]" />
             </div>
-            <p className="mt-2 text-3xl font-extrabold text-slate-900">
+            <p className="mt-2 text-3xl font-extrabold text-[#18162b]">
               {totalInterestedCount}
             </p>
             <p className="mt-1 text-xs text-slate-500">
@@ -441,7 +441,7 @@ export function AdminDashboardClient({
             onClick={() => setActiveTab("companies")}
             className={`inline-flex items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-semibold transition-colors cursor-pointer ${
               activeTab === "companies"
-                ? "border-blue-600 text-blue-600"
+                ? "border-[#2f228c] text-[#2f228c]"
                 : "border-transparent text-slate-500 hover:text-slate-800"
             }`}
           >
@@ -454,7 +454,7 @@ export function AdminDashboardClient({
             onClick={() => setActiveTab("students")}
             className={`inline-flex items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-semibold transition-colors cursor-pointer ${
               activeTab === "students"
-                ? "border-blue-600 text-blue-600"
+                ? "border-[#2f228c] text-[#2f228c]"
                 : "border-transparent text-slate-500 hover:text-slate-800"
             }`}
           >
@@ -480,7 +480,7 @@ export function AdminDashboardClient({
                   <button
                     type="button"
                     onClick={openCreateModal}
-                    className="text-xs font-semibold text-blue-600 hover:underline cursor-pointer"
+                    className="text-xs font-semibold text-[#2f228c] hover:underline cursor-pointer"
                   >
                     + Add New
                   </button>
@@ -488,15 +488,15 @@ export function AdminDashboardClient({
               </div>
 
               {sortedCompanies.length === 0 ? (
-                <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center">
+                <div className="rounded-2xl border border-dashed border-slate-300 bg-[#fdfeff] p-8 text-center">
                   <Building2 className="mx-auto h-8 w-8 text-slate-400" />
-                  <p className="mt-2 text-sm font-semibold text-slate-800">
+                  <p className="mt-2 text-sm font-semibold text-[#18162b]">
                     No companies posted yet
                   </p>
                   <button
                     type="button"
                     onClick={openCreateModal}
-                    className="mt-3 rounded-lg bg-blue-600 px-3.5 py-2 text-xs font-semibold text-white hover:bg-blue-700 cursor-pointer"
+                    className="mt-3 rounded-lg bg-[#2f228c] px-3.5 py-2 text-xs font-semibold text-[#fdfeff] hover:bg-[#23186d] cursor-pointer"
                   >
                     Post First Company
                   </button>
@@ -518,16 +518,16 @@ export function AdminDashboardClient({
                         onClick={() => setSelectedCompanyId(company.id)}
                         className={`w-full text-left rounded-2xl border p-4 transition-all cursor-pointer ${
                           isSelected
-                            ? "border-blue-500 bg-blue-50/50 ring-2 ring-blue-500/15 shadow-sm"
-                            : "border-slate-200 bg-white hover:border-slate-300"
+                            ? "border-[#2f228c] bg-[#2f228c]/[0.04] ring-2 ring-[#2f228c]/15 shadow-sm"
+                            : "border-slate-200 bg-[#fdfeff] hover:border-slate-300"
                         }`}
                       >
                         <div className="flex items-start justify-between gap-2">
                           <div>
-                            <h3 className="text-sm font-bold text-slate-900">
+                            <h3 className="text-sm font-bold text-[#18162b]">
                               {company.name}
                             </h3>
-                            <p className="text-xs font-medium text-blue-600">
+                            <p className="text-xs font-semibold text-[#2f228c]">
                               {company.role}
                             </p>
                           </div>
@@ -580,10 +580,10 @@ export function AdminDashboardClient({
                 <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-6">
                   <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-100 pb-5">
                     <div>
-                      <h2 className="text-2xl font-bold text-slate-900">
+                      <h2 className="text-2xl font-bold text-[#18162b]">
                         {selectedCompany.name}
                       </h2>
-                      <p className="text-sm font-semibold text-blue-600">
+                      <p className="text-sm font-semibold text-[#2f228c]">
                         {selectedCompany.role} &bull;{" "}
                         {selectedCompany.package_ctc}
                       </p>
@@ -625,7 +625,7 @@ export function AdminDashboardClient({
                             window.location.origin
                           )
                         }
-                        className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                        className="inline-flex items-center gap-2 rounded-xl bg-[#2f228c] px-4 py-2.5 text-xs sm:text-sm font-semibold text-[#fdfeff] shadow-sm hover:bg-[#23186d] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                       >
                         <Download className="h-4 w-4" />
                         Download Interested List (PDF)
@@ -634,7 +634,7 @@ export function AdminDashboardClient({
                       <button
                         type="button"
                         onClick={() => openEditModal(selectedCompany)}
-                        className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                        className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-[#fdfeff] px-3 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer"
                       >
                         <Pencil className="h-4 w-4" />
                         Edit
@@ -648,7 +648,7 @@ export function AdminDashboardClient({
                             selectedCompany.name
                           )
                         }
-                        className="inline-flex items-center gap-1.5 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-xs font-semibold text-red-700 hover:bg-red-100 cursor-pointer"
+                        className="inline-flex items-center gap-1.5 rounded-xl border border-[#d7201c]/30 bg-[#d7201c]/[0.07] px-3 py-2.5 text-xs font-semibold text-[#d7201c] hover:bg-[#d7201c]/15 cursor-pointer"
                       >
                         <Trash2 className="h-4 w-4" />
                         Delete
@@ -738,7 +738,7 @@ export function AdminDashboardClient({
                                       href={`/api/resumes/${s.id}`}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="inline-flex items-center gap-1 rounded-lg bg-blue-50 px-2.5 py-1.5 font-semibold text-blue-700 hover:bg-blue-100"
+                                      className="inline-flex items-center gap-1 rounded-lg bg-[#2f228c]/[0.08] px-2.5 py-1.5 font-semibold text-[#2f228c] hover:bg-[#2f228c]/15"
                                     >
                                       <ExternalLink className="h-3 w-3" />
                                       View CV
@@ -901,7 +901,7 @@ export function AdminDashboardClient({
                               href={`/api/resumes/${s.id}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 font-semibold text-blue-600 hover:underline"
+                              className="inline-flex items-center gap-1 font-semibold text-[#2f228c] hover:underline"
                             >
                               <ExternalLink className="h-3 w-3" />
                               Open CV
@@ -1053,8 +1053,8 @@ export function AdminDashboardClient({
                           onClick={() => toggleCourseSelection(c.name)}
                           className={`rounded-lg px-2.5 py-1 text-xs font-semibold border transition-colors cursor-pointer ${
                             active
-                              ? "border-blue-600 bg-blue-600 text-white"
-                              : "border-slate-300 bg-white text-slate-700 hover:bg-slate-100"
+                              ? "border-[#2f228c] bg-[#2f228c] text-[#fdfeff]"
+                              : "border-slate-300 bg-[#fdfeff] text-slate-700 hover:bg-slate-100"
                           }`}
                         >
                           {c.name}
@@ -1143,7 +1143,7 @@ export function AdminDashboardClient({
                 <button
                   type="submit"
                   disabled={postingCompany}
-                  className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60 cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#2f228c] px-5 py-2 text-sm font-semibold text-[#fdfeff] hover:bg-[#23186d] disabled:opacity-60 cursor-pointer"
                 >
                   {postingCompany && (
                     <Loader2 className="h-4 w-4 animate-spin" />

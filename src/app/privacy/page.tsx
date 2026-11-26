@@ -10,13 +10,13 @@ export const metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <header className="border-b border-slate-200 bg-white">
+    <div className="min-h-screen bg-[#fdfeff] flex flex-col">
+      <header className="border-t-[3px] border-t-[#d7201c] border-b border-slate-200 bg-[#fdfeff]">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4 sm:px-6">
           <PlaceOnLogo />
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-slate-900"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-[#2f228c]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Home
@@ -25,9 +25,9 @@ export default function PrivacyPolicyPage() {
       </header>
 
       <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-10 sm:px-6">
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm space-y-6">
+        <div className="rounded-2xl border border-slate-200 bg-[#fdfeff] p-8 shadow-sm space-y-6">
           <div>
-            <h1 className="text-3xl font-extrabold text-slate-900">
+            <h1 className="text-3xl font-extrabold text-[#2f228c]">
               Privacy Policy
             </h1>
             <p className="mt-1 text-sm text-slate-500">

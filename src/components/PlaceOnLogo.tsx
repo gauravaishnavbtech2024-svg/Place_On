@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 interface PlaceOnLogoProps {
@@ -11,26 +12,21 @@ export function PlaceOnLogo({
 }: PlaceOnLogoProps) {
   return (
     <Link href={href} className="inline-flex items-center gap-3 group">
-      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-md shadow-blue-600/20 transition-transform group-hover:scale-105">
-        <svg
-          className="h-5 w-5"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-          <path d="M6 12v5c3 3 9 3 12 0v-5" />
-        </svg>
-      </div>
+      <Image
+        src="/icfaitech-logo.png"
+        alt="IcfaiTech Faculty of Science & Technology (FST)"
+        width={425}
+        height={147}
+        priority
+        className="h-10 w-auto shrink-0 object-contain transition-transform group-hover:scale-[1.02]"
+      />
+      <span className="hidden sm:block h-7 w-px bg-slate-200" />
       <div className="flex flex-col">
-        <span className="text-xl font-bold tracking-tight text-slate-900">
-          Place<span className="text-blue-600">On</span>
+        <span className="text-xl font-bold tracking-tight text-[#2f228c]">
+          Place<span className="text-[#d7201c]">On</span>
         </span>
         {subtitle && (
-          <span className="text-[11px] font-medium uppercase tracking-wider text-slate-500">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
             {subtitle}
           </span>
         )}

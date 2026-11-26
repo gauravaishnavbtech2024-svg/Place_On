@@ -41,9 +41,9 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/60 flex flex-col">
+    <div className="min-h-screen bg-[#fdfeff] bg-gradient-to-br from-[#fdfeff] via-[#2f228c]/[0.03] to-[#d7201c]/[0.04] flex flex-col">
       {/* Top Navbar */}
-      <header className="border-b border-slate-200/70 bg-white/80 backdrop-blur-md">
+      <header className="border-t-[3px] border-t-[#d7201c] border-b border-slate-200/80 bg-[#fdfeff]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
           <PlaceOnLogo />
           <div className="flex items-center gap-3">
@@ -52,7 +52,7 @@ export default async function HomePage() {
                 {activeIsStudent && (
                   <Link
                     href="/student"
-                    className="rounded-lg bg-blue-600 px-3.5 py-2 text-xs sm:text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
+                    className="rounded-lg bg-[#2f228c] px-3.5 py-2 text-xs sm:text-sm font-semibold text-[#fdfeff] hover:bg-[#23186d] transition-colors"
                   >
                     Student Dashboard
                   </Link>
@@ -60,7 +60,7 @@ export default async function HomePage() {
                 {activeIsAdmin && (
                   <Link
                     href="/admin"
-                    className="rounded-lg bg-slate-900 px-3.5 py-2 text-xs sm:text-sm font-semibold text-white hover:bg-slate-800 transition-colors"
+                    className="rounded-lg bg-[#d7201c] px-3.5 py-2 text-xs sm:text-sm font-semibold text-[#fdfeff] hover:bg-[#b31915] transition-colors"
                   >
                     Admin Dashboard
                   </Link>
@@ -68,14 +68,14 @@ export default async function HomePage() {
                 <form action="/api/auth/signout" method="POST">
                   <button
                     type="submit"
-                    className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs sm:text-sm font-medium text-slate-700 hover:bg-slate-50 cursor-pointer"
+                    className="rounded-lg border border-slate-300 bg-[#fdfeff] px-3 py-2 text-xs sm:text-sm font-medium text-slate-700 hover:bg-slate-50 cursor-pointer"
                   >
                     Sign Out
                   </button>
                 </form>
               </div>
             ) : (
-              <span className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+              <span className="rounded-full border border-[#2f228c]/20 bg-[#2f228c]/[0.06] px-3 py-1 text-xs font-semibold text-[#2f228c]">
                 @{ALLOWED_STUDENT_DOMAIN} Portal
               </span>
             )}
@@ -86,14 +86,14 @@ export default async function HomePage() {
       {/* Main Content */}
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-12 sm:px-6">
         <div className="mx-auto max-w-2xl text-center mb-12">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-indigo-700 shadow-sm">
-            <Building2 className="h-3.5 w-3.5" />
-            IU Jaipur Campus Placement Monitor
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#d7201c]/25 bg-[#fdfeff] px-3.5 py-1.5 text-xs font-semibold text-[#2f228c] shadow-sm">
+            <Building2 className="h-3.5 w-3.5 text-[#d7201c]" />
+            IcfaiTech (IU Jaipur) Campus Placement Monitor
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
+          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#18162b]">
             Select your role to enter{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              PlaceOn
+            <span className="text-[#2f228c]">
+              Place<span className="text-[#d7201c]">On</span>
             </span>
           </h1>
           <p className="mt-4 text-base sm:text-lg text-slate-600">
@@ -108,19 +108,19 @@ export default async function HomePage() {
           {/* Student Card */}
           <Link
             href="/login/student"
-            className="group relative flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-8 shadow-lg shadow-slate-200/40 transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-500/10"
+            className="group relative flex flex-col justify-between rounded-2xl border border-slate-200 bg-[#fdfeff] p-8 shadow-lg shadow-[#2f228c]/[0.06] transition-all hover:-translate-y-1 hover:border-[#2f228c]/50 hover:shadow-xl hover:shadow-[#2f228c]/15"
           >
             <div>
               <div className="mb-5 flex items-center justify-between">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 transition-colors group-hover:bg-blue-600 group-hover:text-white">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#2f228c]/[0.08] text-[#2f228c] border border-[#2f228c]/15 transition-colors group-hover:bg-[#2f228c] group-hover:text-[#fdfeff]">
                   <GraduationCap className="h-7 w-7" />
                 </div>
-                <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                <span className="rounded-full bg-[#2f228c]/[0.08] px-3 py-1 text-xs font-semibold text-[#2f228c]">
                   @{ALLOWED_STUDENT_DOMAIN}
                 </span>
               </div>
 
-              <h2 className="text-2xl font-bold text-slate-900">Student</h2>
+              <h2 className="text-2xl font-bold text-[#18162b]">Student</h2>
               <p className="mt-2 text-sm leading-relaxed text-slate-600">
                 Sign in with your university Google account to build your
                 academic profile, upload your CV, and apply for placement drives.
@@ -128,21 +128,21 @@ export default async function HomePage() {
 
               <ul className="mt-6 space-y-2.5 text-sm text-slate-600">
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-blue-600 shrink-0" />
-                  <span>Submit 10th, 12th & past semester scores</span>
+                  <CheckCircle2 className="h-4 w-4 text-[#2f228c] shrink-0" />
+                  <span>Submit 10th, 12th &amp; past semester scores</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-blue-600 shrink-0" />
-                  <span>Upload & update your PDF Resume / CV</span>
+                  <CheckCircle2 className="h-4 w-4 text-[#2f228c] shrink-0" />
+                  <span>Upload &amp; update your PDF Resume / CV</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-blue-600 shrink-0" />
+                  <CheckCircle2 className="h-4 w-4 text-[#2f228c] shrink-0" />
                   <span>Mark Interested / Not Interested on drives</span>
                 </li>
               </ul>
             </div>
 
-            <div className="mt-8 flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 text-sm font-semibold text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white">
+            <div className="mt-8 flex items-center justify-between rounded-xl bg-[#2f228c]/[0.06] px-4 py-3 text-sm font-semibold text-[#2f228c] transition-colors group-hover:bg-[#2f228c] group-hover:text-[#fdfeff]">
               <span>Continue as Student</span>
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </div>
@@ -151,19 +151,19 @@ export default async function HomePage() {
           {/* Admin Card */}
           <Link
             href="/login/admin"
-            className="group relative flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-8 shadow-lg shadow-slate-200/40 transition-all hover:-translate-y-1 hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-500/10"
+            className="group relative flex flex-col justify-between rounded-2xl border border-slate-200 bg-[#fdfeff] p-8 shadow-lg shadow-[#d7201c]/[0.05] transition-all hover:-translate-y-1 hover:border-[#d7201c]/50 hover:shadow-xl hover:shadow-[#d7201c]/15"
           >
             <div>
               <div className="mb-5 flex items-center justify-between">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 transition-colors group-hover:bg-indigo-600 group-hover:text-white">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#d7201c]/[0.08] text-[#d7201c] border border-[#d7201c]/15 transition-colors group-hover:bg-[#d7201c] group-hover:text-[#fdfeff]">
                   <ShieldCheck className="h-7 w-7" />
                 </div>
-                <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
+                <span className="rounded-full bg-[#d7201c]/[0.08] px-3 py-1 text-xs font-semibold text-[#d7201c]">
                   Authorized Only
                 </span>
               </div>
 
-              <h2 className="text-2xl font-bold text-slate-900">Admin</h2>
+              <h2 className="text-2xl font-bold text-[#18162b]">Admin</h2>
               <p className="mt-2 text-sm leading-relaxed text-slate-600">
                 Placement coordinator portal with whitelisted Google sign-in to
                 publish companies, notify students, and export shortlists.
@@ -171,21 +171,21 @@ export default async function HomePage() {
 
               <ul className="mt-6 space-y-2.5 text-sm text-slate-600">
                 <li className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-indigo-600 shrink-0" />
+                  <Mail className="h-4 w-4 text-[#d7201c] shrink-0" />
                   <span>Auto-email all students when posting drives</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <FileSpreadsheet className="h-4 w-4 text-indigo-600 shrink-0" />
+                  <FileSpreadsheet className="h-4 w-4 text-[#d7201c] shrink-0" />
                   <span>Download Interested Students list as PDF</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-indigo-600 shrink-0" />
-                  <span>Browse all student profiles & download CVs</span>
+                  <CheckCircle2 className="h-4 w-4 text-[#d7201c] shrink-0" />
+                  <span>Browse all student profiles &amp; download CVs</span>
                 </li>
               </ul>
             </div>
 
-            <div className="mt-8 flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 text-sm font-semibold text-indigo-600 transition-colors group-hover:bg-indigo-600 group-hover:text-white">
+            <div className="mt-8 flex items-center justify-between rounded-xl bg-[#d7201c]/[0.07] px-4 py-3 text-sm font-semibold text-[#d7201c] transition-colors group-hover:bg-[#d7201c] group-hover:text-[#fdfeff]">
               <span>Continue as Admin</span>
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </div>
@@ -193,14 +193,14 @@ export default async function HomePage() {
         </div>
       </main>
 
-      <footer className="border-t border-slate-200/70 bg-white/60 py-4 text-center text-xs text-slate-500">
+      <footer className="border-t border-slate-200/80 bg-[#fdfeff]/90 py-4 text-center text-xs text-slate-500">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-4 px-4">
-          <span>PlaceOn — Placement Monitoring System for IU Jaipur</span>
+          <span>PlaceOn — Placement Monitoring System for IcfaiTech (IU Jaipur)</span>
           <span>&bull;</span>
-          <Link href="/privacy" className="hover:text-slate-800 underline">
+          <Link href="/privacy" className="hover:text-[#2f228c] underline">
             Privacy Policy
           </Link>
-          <Link href="/terms" className="hover:text-slate-800 underline">
+          <Link href="/terms" className="hover:text-[#2f228c] underline">
             Terms of Service
           </Link>
         </div>

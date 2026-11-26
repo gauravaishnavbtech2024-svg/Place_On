@@ -291,9 +291,9 @@ export function StudentDashboardClient({
   }, [companies, driveFilter, sortBy, student, responseByCompany]);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#fdfeff]">
       {/* Header */}
-      <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur-md">
+      <header className="sticky top-0 z-20 border-t-[3px] border-t-[#d7201c] border-b border-slate-200 bg-[#fdfeff]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
           <PlaceOnLogo href="/student" subtitle="Student Portal" />
 
@@ -374,13 +374,13 @@ export function StudentDashboardClient({
             onClick={() => setActiveTab("drives")}
             className={`inline-flex items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-semibold transition-colors cursor-pointer ${
               activeTab === "drives"
-                ? "border-blue-600 text-blue-600"
+                ? "border-[#2f228c] text-[#2f228c]"
                 : "border-transparent text-slate-500 hover:text-slate-800"
             }`}
           >
             <Briefcase className="h-4 w-4" />
             Company Drives
-            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-700">
+            <span className="rounded-full bg-[#2f228c]/10 px-2 py-0.5 text-xs text-[#2f228c]">
               {companies.length}
             </span>
           </button>
@@ -390,7 +390,7 @@ export function StudentDashboardClient({
             onClick={() => setActiveTab("profile")}
             className={`inline-flex items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-semibold transition-colors cursor-pointer ${
               activeTab === "profile"
-                ? "border-blue-600 text-blue-600"
+                ? "border-[#2f228c] text-[#2f228c]"
                 : "border-transparent text-slate-500 hover:text-slate-800"
             }`}
           >
@@ -429,7 +429,7 @@ export function StudentDashboardClient({
                       onClick={() => setDriveFilter(tab.id)}
                       className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${
                         driveFilter === tab.id
-                          ? "bg-blue-600 text-white"
+                          ? "bg-[#2f228c] text-[#fdfeff]"
                           : "text-slate-600 hover:bg-slate-100"
                       }`}
                     >
@@ -492,16 +492,16 @@ export function StudentDashboardClient({
                                 {isOpen ? "Open" : "Closed"}
                               </span>
                             </div>
-                            <p className="text-sm font-medium text-blue-600 mt-0.5">
+                            <p className="text-sm font-semibold text-[#2f228c] mt-0.5">
                               {company.role}
                             </p>
                           </div>
 
-                          <div className="rounded-xl bg-blue-50 px-3 py-1.5 text-right border border-blue-100">
-                            <span className="block text-[10px] font-semibold uppercase tracking-wider text-blue-600">
+                          <div className="rounded-xl bg-[#2f228c]/[0.05] px-3 py-1.5 text-right border border-[#2f228c]/15">
+                            <span className="block text-[10px] font-semibold uppercase tracking-wider text-[#d7201c]">
                               Package
                             </span>
-                            <span className="text-sm font-bold text-slate-900">
+                            <span className="text-sm font-bold text-[#18162b]">
                               {company.package_ctc}
                             </span>
                           </div>
@@ -664,11 +664,11 @@ export function StudentDashboardClient({
             )}
 
             {/* CV Upload Card */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="rounded-2xl border border-slate-200 bg-[#fdfeff] p-6 shadow-sm">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h2 className="flex items-center gap-2 text-base font-bold text-slate-900">
-                    <FileText className="h-5 w-5 text-blue-600" />
+                  <h2 className="flex items-center gap-2 text-base font-bold text-[#18162b]">
+                    <FileText className="h-5 w-5 text-[#2f228c]" />
                     CV / Resume (PDF only, max 5 MB)
                   </h2>
                   <p className="mt-1 text-xs text-slate-500">
@@ -684,14 +684,14 @@ export function StudentDashboardClient({
                       href={`/api/resumes/${student.id}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-[#fdfeff] px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
                     >
                       <ExternalLink className="h-3.5 w-3.5" />
                       View Current CV
                     </a>
                   )}
 
-                  <label className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3.5 py-2 text-xs font-semibold text-white hover:bg-blue-700 cursor-pointer">
+                  <label className="inline-flex items-center gap-1.5 rounded-lg bg-[#2f228c] px-3.5 py-2 text-xs font-semibold text-[#fdfeff] hover:bg-[#23186d] cursor-pointer">
                     {uploadingResume ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />
                     ) : (
@@ -860,7 +860,7 @@ export function StudentDashboardClient({
                     </p>
                   </div>
 
-                  <div className="inline-flex rounded-lg border border-slate-300 bg-white p-0.5">
+                  <div className="inline-flex rounded-lg border border-slate-300 bg-[#fdfeff] p-0.5">
                     {(["CGPA", "PERCENTAGE"] as const).map((type) => (
                       <button
                         key={type}
@@ -868,7 +868,7 @@ export function StudentDashboardClient({
                         onClick={() => setScoreType(type)}
                         className={`rounded-md px-3 py-1 text-xs font-semibold transition-colors cursor-pointer ${
                           scoreType === type
-                            ? "bg-blue-600 text-white"
+                            ? "bg-[#2f228c] text-[#fdfeff]"
                             : "text-slate-600 hover:text-slate-900"
                         }`}
                       >
@@ -907,8 +907,8 @@ export function StudentDashboardClient({
                     </div>
 
                     {liveAverage !== null && (
-                      <div className="flex items-center gap-2 text-xs font-semibold text-blue-700">
-                        <Sparkles className="h-4 w-4" />
+                      <div className="flex items-center gap-2 text-xs font-semibold text-[#2f228c]">
+                        <Sparkles className="h-4 w-4 text-[#d7201c]" />
                         Calculated Average: {liveAverage}{" "}
                         {scoreType === "CGPA" ? "CGPA" : "%"}
                       </div>
@@ -977,7 +977,7 @@ export function StudentDashboardClient({
                 <button
                   type="submit"
                   disabled={savingProfile}
-                  className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors disabled:opacity-60 cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#2f228c] px-5 py-2.5 text-sm font-semibold text-[#fdfeff] shadow-sm hover:bg-[#23186d] transition-colors disabled:opacity-60 cursor-pointer"
                 >
                   {savingProfile && (
                     <Loader2 className="h-4 w-4 animate-spin" />
