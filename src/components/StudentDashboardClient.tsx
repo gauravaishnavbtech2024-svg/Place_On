@@ -21,7 +21,7 @@ import {
   UserCheck,
   XCircle,
 } from "lucide-react";
-import { PlaceOnLogo } from "./PlaceOnLogo";
+import { AppHeader } from "./AppHeader";
 import { CompanySortSelect } from "./CompanySortSelect";
 import { sortCompanies, type CompanySortOption } from "@/lib/companySort";
 import { BRANCH_SUGGESTIONS, COURSES, getCourseConfig } from "@/lib/constants";
@@ -293,12 +293,12 @@ export function StudentDashboardClient({
   return (
     <div className="min-h-screen bg-[#fdfeff]">
       {/* Header */}
-      <header className="sticky top-0 z-20 border-t-[3px] border-t-[#d7201c] border-b border-slate-200 bg-[#fdfeff]/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
-          <PlaceOnLogo href="/student" subtitle="Student Portal" />
-
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex flex-col items-end">
+      <AppHeader
+        href="/student"
+        subtitle="Student Portal"
+        rightContent={
+          <>
+            <div className="hidden lg:flex flex-col items-end">
               <span className="text-sm font-semibold text-slate-900">
                 {student.full_name || "Student"}
               </span>
@@ -315,12 +315,14 @@ export function StudentDashboardClient({
               {student.profile_completed ? (
                 <>
                   <UserCheck className="h-3.5 w-3.5" />
-                  Profile Complete
+                  <span className="hidden sm:inline">Profile Complete</span>
+                  <span className="sm:hidden">Complete</span>
                 </>
               ) : (
                 <>
                   <AlertCircle className="h-3.5 w-3.5" />
-                  Profile Incomplete
+                  <span className="hidden sm:inline">Profile Incomplete</span>
+                  <span className="sm:hidden">Incomplete</span>
                 </>
               )}
             </span>
@@ -328,15 +330,15 @@ export function StudentDashboardClient({
             <form action="/api/auth/signout" method="POST">
               <button
                 type="submit"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-[#fdfeff] px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 Sign Out
               </button>
             </form>
-          </div>
-        </div>
-      </header>
+          </>
+        }
+      />
 
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         {/* Onboarding Warning Banner */}

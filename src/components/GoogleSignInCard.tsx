@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, AlertCircle, GraduationCap, ShieldCheck, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { ALLOWED_STUDENT_DOMAIN } from "@/lib/constants";
-import { PlaceOnLogo } from "./PlaceOnLogo";
+import { AppHeader } from "./AppHeader";
 
 interface GoogleSignInCardProps {
   role: "student" | "admin";
@@ -57,10 +57,11 @@ export function GoogleSignInCard({ role, errorCode }: GoogleSignInCardProps) {
   }
 
   return (
-    <div className="min-h-screen border-t-[3px] border-t-[#d7201c] bg-[#fdfeff] bg-gradient-to-br from-[#fdfeff] via-[#2f228c]/[0.03] to-[#d7201c]/[0.04] flex flex-col justify-center px-4 py-12">
-      <div className="mx-auto w-full max-w-md">
-        <div className="mb-8 flex items-center justify-between">
-          <PlaceOnLogo />
+    <div className="min-h-screen bg-[#fdfeff] bg-gradient-to-br from-[#fdfeff] via-[#2f228c]/[0.03] to-[#d7201c]/[0.04] flex flex-col">
+      <AppHeader
+        sticky={false}
+        subtitle={isStudent ? "Student Portal" : "Admin Portal"}
+        rightContent={
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-[#2f228c] transition-colors"
@@ -68,7 +69,9 @@ export function GoogleSignInCard({ role, errorCode }: GoogleSignInCardProps) {
             <ArrowLeft className="h-4 w-4" />
             Change role
           </Link>
-        </div>
+        }
+      />
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-12">
 
         <div className="rounded-2xl border border-slate-200 bg-[#fdfeff] p-8 shadow-xl shadow-[#2f228c]/[0.08]">
           <div className="mb-6 flex items-center gap-3">

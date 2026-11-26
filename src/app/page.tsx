@@ -8,7 +8,7 @@ import {
   Mail,
   ShieldCheck,
 } from "lucide-react";
-import { PlaceOnLogo } from "@/components/PlaceOnLogo";
+import { AppHeader } from "@/components/AppHeader";
 import { ALLOWED_STUDENT_DOMAIN } from "@/lib/constants";
 import { isAdminEmail, isAllowedStudentEmail } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -43,45 +43,42 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-[#fdfeff] bg-gradient-to-br from-[#fdfeff] via-[#2f228c]/[0.03] to-[#d7201c]/[0.04] flex flex-col">
       {/* Top Navbar */}
-      <header className="border-t-[3px] border-t-[#d7201c] border-b border-slate-200/80 bg-[#fdfeff]/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-          <PlaceOnLogo />
-          <div className="flex items-center gap-3">
-            {activeEmail ? (
-              <div className="flex items-center gap-2">
-                {activeIsStudent && (
-                  <Link
-                    href="/student"
-                    className="rounded-lg bg-[#2f228c] px-3.5 py-2 text-xs sm:text-sm font-semibold text-[#fdfeff] hover:bg-[#23186d] transition-colors"
-                  >
-                    Student Dashboard
-                  </Link>
-                )}
-                {activeIsAdmin && (
-                  <Link
-                    href="/admin"
-                    className="rounded-lg bg-[#d7201c] px-3.5 py-2 text-xs sm:text-sm font-semibold text-[#fdfeff] hover:bg-[#b31915] transition-colors"
-                  >
-                    Admin Dashboard
-                  </Link>
-                )}
-                <form action="/api/auth/signout" method="POST">
-                  <button
-                    type="submit"
-                    className="rounded-lg border border-slate-300 bg-[#fdfeff] px-3 py-2 text-xs sm:text-sm font-medium text-slate-700 hover:bg-slate-50 cursor-pointer"
-                  >
-                    Sign Out
-                  </button>
-                </form>
-              </div>
-            ) : (
-              <span className="rounded-full border border-[#2f228c]/20 bg-[#2f228c]/[0.06] px-3 py-1 text-xs font-semibold text-[#2f228c]">
-                @{ALLOWED_STUDENT_DOMAIN} Portal
-              </span>
-            )}
-          </div>
-        </div>
-      </header>
+      <AppHeader
+        rightContent={
+          activeEmail ? (
+            <div className="flex items-center gap-2">
+              {activeIsStudent && (
+                <Link
+                  href="/student"
+                  className="rounded-lg bg-[#2f228c] px-3.5 py-2 text-xs sm:text-sm font-semibold text-[#fdfeff] hover:bg-[#23186d] transition-colors"
+                >
+                  Student Dashboard
+                </Link>
+              )}
+              {activeIsAdmin && (
+                <Link
+                  href="/admin"
+                  className="rounded-lg bg-[#d7201c] px-3.5 py-2 text-xs sm:text-sm font-semibold text-[#fdfeff] hover:bg-[#b31915] transition-colors"
+                >
+                  Admin Dashboard
+                </Link>
+              )}
+              <form action="/api/auth/signout" method="POST">
+                <button
+                  type="submit"
+                  className="rounded-lg border border-slate-300 bg-[#fdfeff] px-3 py-2 text-xs sm:text-sm font-medium text-slate-700 hover:bg-slate-50 cursor-pointer"
+                >
+                  Sign Out
+                </button>
+              </form>
+            </div>
+          ) : (
+            <span className="rounded-full border border-[#2f228c]/20 bg-[#2f228c]/[0.06] px-3 py-1 text-xs font-semibold text-[#2f228c]">
+              @{ALLOWED_STUDENT_DOMAIN} Portal
+            </span>
+          )
+        }
+      />
 
       {/* Main Content */}
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-12 sm:px-6">

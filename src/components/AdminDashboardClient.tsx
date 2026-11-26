@@ -20,7 +20,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { PlaceOnLogo } from "./PlaceOnLogo";
+import { AppHeader } from "./AppHeader";
 import { CompanySortSelect } from "./CompanySortSelect";
 import { sortCompanies, type CompanySortOption } from "@/lib/companySort";
 import { COURSES } from "@/lib/constants";
@@ -320,12 +320,13 @@ export function AdminDashboardClient({
   return (
     <div className="min-h-screen bg-[#fdfeff]">
       {/* Header */}
-      <header className="sticky top-0 z-20 border-t-[3px] border-t-[#d7201c] border-b border-slate-200 bg-[#fdfeff]/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
-          <PlaceOnLogo href="/admin" subtitle="Admin Portal" />
-
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex flex-col items-end">
+      <AppHeader
+        href="/admin"
+        subtitle="Admin Portal"
+        maxWidthClass="max-w-7xl"
+        rightContent={
+          <>
+            <div className="hidden lg:flex flex-col items-end">
               <span className="text-xs font-semibold text-[#d7201c]">
                 Placement Admin
               </span>
@@ -344,15 +345,15 @@ export function AdminDashboardClient({
             <form action="/api/auth/signout" method="POST">
               <button
                 type="submit"
-                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-[#fdfeff] px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 Sign Out
               </button>
             </form>
-          </div>
-        </div>
-      </header>
+          </>
+        }
+      />
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 space-y-6">
         {banner && (

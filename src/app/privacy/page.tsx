@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { PlaceOnLogo } from "@/components/PlaceOnLogo";
+import { AppHeader } from "@/components/AppHeader";
 import { ALLOWED_STUDENT_DOMAIN } from "@/lib/constants";
 
 export const metadata = {
@@ -11,9 +11,10 @@ export const metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen bg-[#fdfeff] flex flex-col">
-      <header className="border-t-[3px] border-t-[#d7201c] border-b border-slate-200 bg-[#fdfeff]">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4 sm:px-6">
-          <PlaceOnLogo />
+      <AppHeader
+        maxWidthClass="max-w-4xl"
+        sticky={false}
+        rightContent={
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-[#2f228c]"
@@ -21,8 +22,8 @@ export default function PrivacyPolicyPage() {
             <ArrowLeft className="h-4 w-4" />
             Back to Home
           </Link>
-        </div>
-      </header>
+        }
+      />
 
       <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-10 sm:px-6">
         <div className="rounded-2xl border border-slate-200 bg-[#fdfeff] p-8 shadow-sm space-y-6">
