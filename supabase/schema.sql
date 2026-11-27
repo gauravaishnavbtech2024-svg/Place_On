@@ -11,6 +11,13 @@ create table if not exists public.admin_whitelist (
   created_at timestamptz not null default now()
 );
 
+-- 2b. Leadership (Dean / Director / HoD) Whitelist Table
+create table if not exists public.leadership_whitelist (
+  email text primary key,
+  added_by text,
+  created_at timestamptz not null default now()
+);
+
 -- Optional: Seed initial admin email(s) directly in SQL as well (or set ADMIN_EMAILS in .env.local / Vercel)
 -- insert into public.admin_whitelist (email, added_by) values ('placement.head@iujaipur.edu.in', 'seed') on conflict do nothing;
 
@@ -25,6 +32,21 @@ as $$
   select exists (
     select 1
     from public.admin_whitelist
+    where lower(email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+  );
+$$;
+
+-- Helper function to check if the current authenticated user is leadership (Dean / Director / HoD)
+create or replace function public.is_leadership()
+returns boolean
+language sql
+security definer
+stable
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.leadership_whitelist
     where lower(email) = lower(coalesce(auth.jwt() ->> 'email', ''))
   );
 $$;
@@ -101,9 +123,17 @@ for each row execute function public.set_updated_at();
 
 -- 7. Row Level Security (RLS)
 alter table public.admin_whitelist enable row level security;
+alter table public.leadership_whitelist enable row level security;
 alter table public.students enable row level security;
 alter table public.companies enable row level security;
 alter table public.company_responses enable row level security;
+
+-- leadership_whitelist policies
+drop policy if exists "Leadership can view whitelist" on public.leadership_whitelist;
+create policy "Leadership can view whitelist"
+on public.leadership_whitelist for select
+to authenticated
+using (public.is_leadership());
 
 -- admin_whitelist policies
 drop policy if exists "Admins can view whitelist" on public.admin_whitelist;
@@ -129,7 +159,7 @@ drop policy if exists "Students can view own profile" on public.students;
 create policy "Students can view own profile"
 on public.students for select
 to authenticated
-using (auth.uid() = id or public.is_admin());
+using (auth.uid() = id or public.is_admin() or public.is_leadership());
 
 drop policy if exists "Students can insert own profile" on public.students;
 create policy "Students can insert own profile"
@@ -175,7 +205,7 @@ drop policy if exists "Students and admins can view responses" on public.company
 create policy "Students and admins can view responses"
 on public.company_responses for select
 to authenticated
-using (auth.uid() = student_id or public.is_admin());
+using (auth.uid() = student_id or public.is_admin() or public.is_leadership());
 
 drop policy if exists "Students can insert own response" on public.company_responses;
 create policy "Students can insert own response"
@@ -222,6 +252,7 @@ using (
   and (
     (storage.foldername(name))[1] = auth.uid()::text
     or public.is_admin()
+    or public.is_leadership()
   )
 );
 
@@ -237,9 +268,11 @@ using (
 -- 9. Explicit Schema & Table Grants (RLS still enforces row-level access)
 grant usage on schema public to authenticated, service_role;
 grant select, insert, update, delete on table public.admin_whitelist to authenticated, service_role;
+grant select, insert, update, delete on table public.leadership_whitelist to authenticated, service_role;
 grant select, insert, update on table public.students to authenticated;
 grant all on table public.students to service_role;
 grant select, insert, update, delete on table public.companies to authenticated, service_role;
 grant select, insert, update on table public.company_responses to authenticated;
 grant all on table public.company_responses to service_role;
 grant execute on function public.is_admin() to authenticated, service_role;
+grant execute on function public.is_leadership() to authenticated, service_role;

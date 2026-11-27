@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { isAdminEmail } from "@/lib/auth";
+import { isAdminEmail, isLeadershipEmail } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
@@ -21,13 +21,14 @@ export async function GET(
   }
 
   const isOwner = user.id === studentId;
-  const isAdmin = await isAdminEmail(user.email);
+  const isStaff =
+    (await isAdminEmail(user.email)) || (await isLeadershipEmail(user.email));
 
-  if (!isOwner && !isAdmin) {
+  if (!isOwner && !isStaff) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const client = (isAdmin ? createAdminClient() : null) ?? supabase;
+  const client = (isStaff ? createAdminClient() : null) ?? supabase;
 
   const { data: student, error } = await client
     .from("students")

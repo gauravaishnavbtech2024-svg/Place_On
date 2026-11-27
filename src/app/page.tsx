@@ -5,13 +5,18 @@ import {
   CheckCircle2,
   FileSpreadsheet,
   GraduationCap,
+  Landmark,
   Mail,
   ShieldCheck,
 } from "lucide-react";
 import { AppHeader } from "@/components/AppHeader";
 import { SignOutButton } from "@/components/SignOutButton";
 import { ALLOWED_STUDENT_DOMAIN } from "@/lib/constants";
-import { isAdminEmail, isAllowedStudentEmail } from "@/lib/auth";
+import {
+  isAdminEmail,
+  isAllowedStudentEmail,
+  isLeadershipEmail,
+} from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -20,6 +25,7 @@ export default async function HomePage() {
   let activeEmail: string | null = null;
   let activeIsAdmin = false;
   let activeIsStudent = false;
+  let activeIsLeadership = false;
 
   if (
     process.env.NEXT_PUBLIC_SUPABASE_URL &&
@@ -35,6 +41,7 @@ export default async function HomePage() {
         activeEmail = user.email;
         activeIsAdmin = await isAdminEmail(user.email);
         activeIsStudent = isAllowedStudentEmail(user.email);
+        activeIsLeadership = await isLeadershipEmail(user.email);
       }
     } catch {
       // Ignore auth lookup errors on initial unconfigured setup
@@ -62,6 +69,14 @@ export default async function HomePage() {
                   className="rounded-lg bg-[#d7201c] px-3.5 py-2 text-xs sm:text-sm font-semibold text-[#fdfeff] hover:bg-[#b31915] transition-colors"
                 >
                   Admin Dashboard
+                </Link>
+              )}
+              {activeIsLeadership && (
+                <Link
+                  href="/leadership"
+                  className="rounded-lg border border-[#2f228c]/30 bg-[#fdfeff] px-3.5 py-2 text-xs sm:text-sm font-semibold text-[#2f228c] hover:bg-[#2f228c]/[0.06] transition-colors"
+                >
+                  Leadership Portal
                 </Link>
               )}
               <SignOutButton />
@@ -95,7 +110,7 @@ export default async function HomePage() {
         </div>
 
         {/* Role Selection Cards */}
-        <div className="mx-auto grid w-full max-w-4xl gap-6 md:grid-cols-2">
+        <div className="mx-auto grid w-full max-w-6xl gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* Student Card */}
           <Link
             href="/login/student"
@@ -178,6 +193,51 @@ export default async function HomePage() {
 
             <div className="mt-8 flex items-center justify-between rounded-xl bg-[#d7201c]/[0.07] px-4 py-3 text-sm font-semibold text-[#d7201c] transition-colors group-hover:bg-[#d7201c] group-hover:text-[#fdfeff]">
               <span>Continue as Admin</span>
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </div>
+          </Link>
+
+          {/* Dean / Director / HoD Card */}
+          <Link
+            href="/login/leadership"
+            className="group relative flex flex-col justify-between rounded-2xl border border-slate-200 bg-[#fdfeff] p-8 shadow-lg shadow-[#2f228c]/[0.06] transition-all hover:-translate-y-1 hover:border-[#2f228c]/50 hover:shadow-xl hover:shadow-[#2f228c]/15 md:col-span-2 lg:col-span-1"
+          >
+            <div>
+              <div className="mb-5 flex items-center justify-between">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#2f228c]/[0.08] text-[#2f228c] border border-[#2f228c]/15 transition-colors group-hover:bg-[#2f228c] group-hover:text-[#fdfeff]">
+                  <Landmark className="h-7 w-7" />
+                </div>
+                <span className="rounded-full bg-[#2f228c]/[0.08] px-3 py-1 text-xs font-semibold text-[#2f228c]">
+                  Executive
+                </span>
+              </div>
+
+              <h2 className="text-2xl font-bold text-[#18162b]">
+                Dean / Director / HoD
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                Leadership oversight view to monitor coordinator drive postings,
+                student participation counts, and exportable PDF shortlists.
+              </p>
+
+              <ul className="mt-6 space-y-2.5 text-sm text-slate-600">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-[#2f228c] shrink-0" />
+                  <span>Filter companies by posting Admin</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-[#2f228c] shrink-0" />
+                  <span>Track how many drives each student applied to</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-[#2f228c] shrink-0" />
+                  <span>Sort by posted date &amp; deadline, export PDFs</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="mt-8 flex items-center justify-between rounded-xl bg-[#2f228c]/[0.06] px-4 py-3 text-sm font-semibold text-[#2f228c] transition-colors group-hover:bg-[#2f228c] group-hover:text-[#fdfeff]">
+              <span>Continue as Leadership</span>
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </div>
           </Link>

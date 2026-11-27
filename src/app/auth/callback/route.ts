@@ -2,15 +2,23 @@ import { NextResponse } from "next/server";
 import {
   isAdminEmail,
   isAllowedStudentEmail,
+  isLeadershipEmail,
   normalizeEmail,
   syncEnvAdminToWhitelist,
+  syncEnvLeadershipToWhitelist,
 } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const role = searchParams.get("role") === "admin" ? "admin" : "student";
+  const rawRole = searchParams.get("role");
+  const role =
+    rawRole === "admin"
+      ? "admin"
+      : rawRole === "leadership"
+      ? "leadership"
+      : "student";
 
   if (!code) {
     return NextResponse.redirect(`${origin}/login/${role}?error=oauth_failed`);
@@ -36,6 +44,19 @@ export async function GET(request: Request) {
 
     await syncEnvAdminToWhitelist(email);
     return NextResponse.redirect(`${origin}/admin`);
+  }
+
+  if (role === "leadership") {
+    const allowed = await isLeadershipEmail(email);
+    if (!allowed) {
+      await supabase.auth.signOut();
+      return NextResponse.redirect(
+        `${origin}/login/leadership?error=unauthorized_leadership`
+      );
+    }
+
+    await syncEnvLeadershipToWhitelist(email);
+    return NextResponse.redirect(`${origin}/leadership`);
   }
 
   // Student flow

@@ -2,13 +2,20 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, AlertCircle, GraduationCap, ShieldCheck, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  AlertCircle,
+  GraduationCap,
+  Landmark,
+  Loader2,
+  ShieldCheck,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { ALLOWED_STUDENT_DOMAIN } from "@/lib/constants";
 import { AppHeader } from "./AppHeader";
 
 interface GoogleSignInCardProps {
-  role: "student" | "admin";
+  role: "student" | "admin" | "leadership";
   errorCode?: string;
 }
 
@@ -16,6 +23,8 @@ const ERROR_MESSAGES: Record<string, string> = {
   invalid_domain: `Access denied. Only @${ALLOWED_STUDENT_DOMAIN} Google accounts are allowed for Student login.`,
   unauthorized_admin:
     "Access denied. This Google email is not authorized as a PlaceOn Admin. Contact the Placement Cell to get whitelisted.",
+  unauthorized_leadership:
+    "Access denied. This Google email is not authorized for the Dean / Director / HoD portal.",
   oauth_failed:
     "Google sign-in could not be completed. Please try again or check your popup/cookie settings.",
 };
@@ -25,7 +34,10 @@ export function GoogleSignInCard({ role, errorCode }: GoogleSignInCardProps) {
   const [localError, setLocalError] = useState<string | null>(null);
 
   const isStudent = role === "student";
-  const displayError = localError || (errorCode ? ERROR_MESSAGES[errorCode] : null);
+  const isAdmin = role === "admin";
+  const isLeadership = role === "leadership";
+  const displayError =
+    localError || (errorCode ? ERROR_MESSAGES[errorCode] : null);
 
   async function handleGoogleLogin() {
     setLoading(true);
@@ -56,11 +68,23 @@ export function GoogleSignInCard({ role, errorCode }: GoogleSignInCardProps) {
     }
   }
 
+  const portalLabel = isStudent
+    ? "Student Portal"
+    : isAdmin
+    ? "Admin Portal"
+    : "Dean / Director / HoD";
+
+  const heading = isStudent
+    ? "Student Google Sign-In"
+    : isAdmin
+    ? "Admin Google Sign-In"
+    : "Leadership Google Sign-In";
+
   return (
     <div className="min-h-screen bg-[#fdfeff] bg-gradient-to-br from-[#fdfeff] via-[#2f228c]/[0.03] to-[#d7201c]/[0.04] flex flex-col">
       <AppHeader
         sticky={false}
-        subtitle={isStudent ? "Student Portal" : "Admin Portal"}
+        subtitle={portalLabel}
         rightContent={
           <Link
             href="/"
@@ -72,34 +96,35 @@ export function GoogleSignInCard({ role, errorCode }: GoogleSignInCardProps) {
         }
       />
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-12">
-
         <div className="rounded-2xl border border-slate-200 bg-[#fdfeff] p-8 shadow-xl shadow-[#2f228c]/[0.08]">
           <div className="mb-6 flex items-center gap-3">
             <div
               className={`flex h-12 w-12 items-center justify-center rounded-xl border ${
-                isStudent
-                  ? "bg-[#2f228c]/[0.08] text-[#2f228c] border-[#2f228c]/20"
-                  : "bg-[#d7201c]/[0.08] text-[#d7201c] border-[#d7201c]/20"
+                isAdmin
+                  ? "bg-[#d7201c]/[0.08] text-[#d7201c] border-[#d7201c]/20"
+                  : "bg-[#2f228c]/[0.08] text-[#2f228c] border-[#2f228c]/20"
               }`}
             >
               {isStudent ? (
                 <GraduationCap className="h-6 w-6" />
-              ) : (
+              ) : isAdmin ? (
                 <ShieldCheck className="h-6 w-6" />
+              ) : (
+                <Landmark className="h-6 w-6" />
               )}
             </div>
             <div>
               <span
                 className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                  isStudent
-                    ? "bg-[#2f228c]/10 text-[#2f228c]"
-                    : "bg-[#d7201c]/10 text-[#d7201c]"
+                  isAdmin
+                    ? "bg-[#d7201c]/10 text-[#d7201c]"
+                    : "bg-[#2f228c]/10 text-[#2f228c]"
                 }`}
               >
-                {isStudent ? "Student Portal" : "Admin Portal"}
+                {portalLabel}
               </span>
               <h1 className="mt-1 text-xl font-bold text-[#18162b]">
-                {isStudent ? "Student Google Sign-In" : "Admin Google Sign-In"}
+                {heading}
               </h1>
             </div>
           </div>
@@ -113,13 +138,22 @@ export function GoogleSignInCard({ role, errorCode }: GoogleSignInCardProps) {
                 </span>{" "}
                 to access your academic profile and placement drives.
               </>
-            ) : (
+            ) : isAdmin ? (
               <>
                 Restricted to authorized Placement Cell coordinators. Only{" "}
                 <span className="font-semibold text-[#d7201c]">
                   whitelisted admin email IDs
                 </span>{" "}
                 can access the PlaceOn Admin dashboard.
+              </>
+            ) : (
+              <>
+                Executive oversight portal for{" "}
+                <span className="font-semibold text-[#2f228c]">
+                  Dean, Director &amp; HoD
+                </span>
+                . Review coordinator postings, student placement interest
+                counts, and company shortlists.
               </>
             )}
           </p>
@@ -159,13 +193,17 @@ export function GoogleSignInCard({ role, errorCode }: GoogleSignInCardProps) {
                 />
               </svg>
             )}
-            <span>{loading ? "Redirecting to Google..." : "Continue with Google"}</span>
+            <span>
+              {loading ? "Redirecting to Google..." : "Continue with Google"}
+            </span>
           </button>
 
           <div className="mt-6 border-t border-slate-100 pt-4 text-center text-xs text-slate-500">
             {isStudent
-              ? `Personal Gmail accounts are automatically blocked.`
-              : `Unauthorized accounts will be signed out automatically.`}
+              ? "Personal Gmail accounts are automatically blocked."
+              : isLeadership
+              ? "Authorized Dean, Director & HoD accounts only."
+              : "Unauthorized accounts will be signed out automatically."}
           </div>
         </div>
       </div>
